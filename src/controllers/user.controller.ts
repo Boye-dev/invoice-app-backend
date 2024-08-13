@@ -1,4 +1,3 @@
-import bcrypt from "bcrypt";
 import ApiError from "../errors/apiError";
 import { ExpresFunction, IdParam } from "../interfaces/helper.interface";
 import {
