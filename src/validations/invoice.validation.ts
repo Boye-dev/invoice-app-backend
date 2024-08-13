@@ -35,11 +35,26 @@ const createInvoiceSchema = {
 };
 const updateInvoiceSchema = {
   body: Joi.object({
-    firstname: Joi.string(),
-    lastname: Joi.string(),
-    address: Joi.string(),
-    email: Joi.string().email(),
-    phoneNumber: Joi.string(),
+    paymentStatus: Joi.string().valid(...Object.values(PaymentStatus)),
+
+    type: Joi.string().valid(...Object.values(InvoiceType)),
+    products: Joi.array().items(
+      Joi.string()
+        .custom((value, helpers) => {
+          if (!Types.ObjectId.isValid(value)) {
+            return helpers.error("any.invalid");
+          }
+          return value;
+        }, "ObjectId validation")
+        .required()
+    ),
+    client: Joi.string().custom((value, helpers) => {
+      if (!Types.ObjectId.isValid(value)) {
+        return helpers.error("any.invalid");
+      }
+      return value;
+    }, "ObjectId validation"),
+    name: Joi.string(),
   }),
   params: Joi.object({
     id: Joi.string()
