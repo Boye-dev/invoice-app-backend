@@ -10,7 +10,6 @@ An Invoice Management Application built using Express.js, MongoDB, and TypeScrip
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [API Endpoints](#api-endpoints)
-- [License](#license)
 
 ## Features
 
