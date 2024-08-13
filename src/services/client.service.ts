@@ -47,7 +47,7 @@ export const updateClientService = async (
 
 export const getClientsService = async (user: Types.ObjectId) => {
   const clients = await paginatedFind<IClient>(Client, { user });
-  return new ApiResponse(201, "Clients fetched successfully", clients);
+  return new ApiResponse(200, "Clients fetched successfully", clients);
 };
 
 export const getByIdClientService = async (

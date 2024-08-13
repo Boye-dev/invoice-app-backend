@@ -3,10 +3,11 @@ import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
 import { connectDb } from "./config/db";
-import userRoutes from "./routes/user.routes";
-import clientRoutes from "./routes/client.routes";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import ApiError from "./errors/apiError";
+import userRoutes from "./routes/user.routes";
+import clientRoutes from "./routes/client.routes";
+import productRoutes from "./routes/product.routes";
 
 const PORT = 4000;
 
@@ -24,6 +25,7 @@ connectDb();
 
 app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);
+app.use("/api/products", productRoutes);
 
 app.listen(PORT, () => {
   console.log("Server Listening on port 4000...");
