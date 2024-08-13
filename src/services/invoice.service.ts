@@ -42,6 +42,10 @@ export const updateInvoiceService = async (
     new: true,
   });
 
+  if (!updatedInvoice) {
+    throw new ApiError(404, `Invoice not found`);
+  }
+
   return new ApiResponse(
     200,
     "Invoice Updated Successfully",

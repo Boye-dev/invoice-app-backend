@@ -37,6 +37,9 @@ export const updateClientService = async (
   const updatedClient = await Client.findByIdAndUpdate(param.id, data, {
     new: true,
   });
+  if (!updatedClient) {
+    throw new ApiError(404, `Client not found`);
+  }
 
   return new ApiResponse(
     200,
