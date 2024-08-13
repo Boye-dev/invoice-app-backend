@@ -30,18 +30,26 @@ export const updateProductService = async (
   param: IdParam,
   data: Partial<CreateProduct>
 ) => {
-  const product = await Product.findOne({
-    user,
-    _id: param.id,
-    name: data.name,
-  });
-  if (product) {
-    throw new ApiError(404, `Cannot update product`);
+  const product = await Product.findById(param.id);
+  if (!product) {
+    throw new ApiError(404, `Product not found`);
   }
+
+  const hasName = await Product.findOne({ name: data.name });
+  if (hasName) {
+    throw new ApiError(404, `Product with name :${data.name} already exists`);
+  }
+
+  if (product.user.toString() !== user.toString()) {
+    throw new ApiError(403, "You don't have permission to update this product");
+  }
+
   const updatedProduct = await Product.findByIdAndUpdate(param.id, data, {
     new: true,
   });
-
+  if (!updatedProduct) {
+    throw new ApiError(404, "Product not found");
+  }
   return new ApiResponse(
     200,
     "Product Updated Successfully",
