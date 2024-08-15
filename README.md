@@ -9,12 +9,19 @@ https://documenter.getpostman.com/view/17301223/2sA3s6DpEs
 
 ## Table of Contents
 
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [API Endpoints](#api-endpoints)
+- [Invoice App](#invoice-app)
+- [Documentation](#documentation)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Technologies Used](#technologies-used)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Project Structure](#project-structure)
+  - [API Endpoints](#api-endpoints)
+    - [Clients](#clients)
+    - [Products](#products)
+    - [Invoices](#invoices)
+    - [Users](#users)
 
 ## Features
 
@@ -57,6 +64,8 @@ https://documenter.getpostman.com/view/17301223/2sA3s6DpEs
     AUTH_EMAIL=your_gmail
     AUTH_PASS=your_gmail_api_key
     JWT_SECRET=your_jwt_secret
+    DOMAIN_NAME=https://example.com
+
     ```
 4. Build the project:
 
@@ -124,6 +133,7 @@ https://documenter.getpostman.com/view/17301223/2sA3s6DpEs
 - `PATCH /users/:id`: Update a user by ID.
 - `POST /users/forgot-password`: Request password reset.
 - `PATCH /users/reset-password/:id/:token`: Reset password.
+- `PATCH /users/update-password/:id`: Update password.
 
 
 
