@@ -3,7 +3,9 @@ import {
   forgotPasswordValidation,
   getUserByIdValidation,
   loginUserValidation,
+  refreshTokenValidation,
   resetPassswordValidation,
+  updatePassswordValidation,
   updateUserValidation,
   verifyUserValidation,
 } from "./../validations/user.validation";
@@ -13,7 +15,9 @@ import {
   forgotPassword,
   getUserById,
   login,
+  refresh,
   resetPassword,
+  updatePassword,
   updateUser,
   verifyUser,
 } from "../controllers/user.controller";
@@ -46,6 +50,8 @@ router
 
 router.post("/login", loginUserValidation(), login);
 
+router.post("/refresh", refreshTokenValidation(), refresh);
+
 router.post("/forgot-password", forgotPasswordValidation(), forgotPassword);
 
 router.get("/verify/:id/:token", verifyUserValidation(), verifyUser);
@@ -56,4 +62,9 @@ router.patch(
   resetPassword
 );
 
+router.patch(
+  "/update-password/:id",
+  updatePassswordValidation(),
+  updatePassword
+);
 export default router;

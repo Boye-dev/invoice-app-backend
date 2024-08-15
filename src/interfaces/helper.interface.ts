@@ -12,3 +12,9 @@ export type ExpresFunction<B = {}, Q = {}> = (
 export interface IdParam {
   id: Types.ObjectId;
 }
+export interface IParams {
+  page?: number;
+  pageSize?: number;
+  sort?: string;
+  search?: string;
+}

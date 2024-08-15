@@ -1,5 +1,9 @@
 import { Types } from "mongoose";
-import { CreateProduct, IProduct } from "../interfaces/product.interface";
+import {
+  CreateProduct,
+  IProduct,
+  IProductParams,
+} from "../interfaces/product.interface";
 import Product from "../models/Product";
 import ApiError from "../errors/apiError";
 import ApiResponse from "../errors/apiResponse";
@@ -57,8 +61,16 @@ export const updateProductService = async (
   );
 };
 
-export const getProductsService = async (user: Types.ObjectId) => {
-  const products = await paginatedFind<IProduct>(Product, { user });
+export const getProductsService = async (
+  user: Types.ObjectId,
+  query: IProductParams
+) => {
+  const products = await paginatedFind<IProduct>(Product, {
+    user,
+    ...(query.search && {
+      name: { $regex: query.search, $options: "i" },
+    }),
+  });
   return new ApiResponse(200, "Products fetched successfully", products);
 };
 

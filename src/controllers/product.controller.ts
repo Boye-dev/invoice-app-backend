@@ -1,5 +1,5 @@
 import ApiError from "../errors/apiError";
-import { CreateProduct } from "../interfaces/product.interface";
+import { CreateProduct, IProductParams } from "../interfaces/product.interface";
 import { ExpresFunction, IdParam } from "../interfaces/helper.interface";
 import {
   createProductService,
@@ -75,12 +75,16 @@ export const deleteProduct: ExpresFunction = async (req, res, next) => {
   }
 };
 
-export const getProducts: ExpresFunction = async (req, res, next) => {
+export const getProducts: ExpresFunction<{}, IProductParams> = async (
+  req,
+  res,
+  next
+) => {
   try {
     if (!req.user) {
       throw new ApiError(401, "No logged in user");
     }
-    const data = await getProductsService(req.user.id);
+    const data = await getProductsService(req.user.id, req.query);
     return res.status(200).json(data);
   } catch (error) {
     next(error);

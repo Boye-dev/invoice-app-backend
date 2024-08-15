@@ -1,5 +1,5 @@
 import ApiError from "../errors/apiError";
-import { CreateInvoice } from "../interfaces/invoice.interface";
+import { CreateInvoice, IInvoiceParams } from "../interfaces/invoice.interface";
 import { ExpresFunction, IdParam } from "../interfaces/helper.interface";
 import {
   createInvoiceService,
@@ -21,6 +21,7 @@ export const createInvoice: ExpresFunction<CreateInvoice> = async (
     const data = await createInvoiceService(req.user.id, req.body);
     return res.status(201).json(data);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -56,12 +57,16 @@ export const deleteInvoice: ExpresFunction = async (req, res, next) => {
   }
 };
 
-export const getInvoices: ExpresFunction = async (req, res, next) => {
+export const getInvoices: ExpresFunction<{}, IInvoiceParams> = async (
+  req,
+  res,
+  next
+) => {
   try {
     if (!req.user) {
       throw new ApiError(401, "No logged in user");
     }
-    const data = await getInvoicesService(req.user.id);
+    const data = await getInvoicesService(req.user.id, req.query);
     return res.status(200).json(data);
   } catch (error) {
     next(error);

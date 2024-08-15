@@ -2,7 +2,9 @@ import ApiError from "../errors/apiError";
 import { ExpresFunction, IdParam } from "../interfaces/helper.interface";
 import {
   CreateUserRequest,
+  IPasswordReset,
   IUserLogin,
+  IUserRefresh,
   IUserReset,
   IUserVerify,
 } from "../interfaces/user.interface";
@@ -14,6 +16,8 @@ import {
   getUserByIdService,
   loginService,
   reesetPasswordService,
+  refreshService,
+  updatePasswordService,
   updateUserService,
   verifyMailService,
 } from "../services/user.service";
@@ -99,6 +103,14 @@ export const login: ExpresFunction<IUserLogin> = async (req, res, next) => {
     next(error);
   }
 };
+export const refresh: ExpresFunction<IUserRefresh> = async (req, res, next) => {
+  try {
+    const data = await refreshService(req.body);
+    return res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const forgotPassword: ExpresFunction<Pick<IUserLogin, "email">> = async (
   req,
@@ -132,6 +144,19 @@ export const resetPassword: ExpresFunction<IUserReset> = async (
       req.params as IUserVerify,
       req.body
     );
+    return res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updatePassword: ExpresFunction<IPasswordReset> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const data = await updatePasswordService(req.params as IdParam, req.body);
     return res.status(200).json(data);
   } catch (error) {
     next(error);

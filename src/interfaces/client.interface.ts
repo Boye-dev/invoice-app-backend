@@ -1,4 +1,5 @@
 import { Document, Types } from "mongoose";
+import { IParams } from "./helper.interface";
 
 export interface IClient extends Document {
   firstname: string;
@@ -7,6 +8,7 @@ export interface IClient extends Document {
   email: string;
   phoneNumber: string;
   user: Types.ObjectId;
+  _id?: Types.ObjectId;
 }
 
 export interface CreateClient {
@@ -16,3 +18,4 @@ export interface CreateClient {
   email: string;
   phoneNumber: string;
 }
+export interface IClientParams extends IParams {}

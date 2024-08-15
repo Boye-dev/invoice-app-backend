@@ -6,7 +6,7 @@ export interface CreateUserRequest {
   lastname: string;
   profilePicture: string;
   password: string;
-  phonenNumber: string;
+  phoneNumber: string;
   businessName: string;
   businessAddress: string;
   businessCity: string;
@@ -15,13 +15,17 @@ export interface CreateUserRequest {
   businessCountry: string;
   businessPhone: string;
   businessEmail: string;
-  businessWebsite: string;
+  businessWebsite?: string;
   businessLogo: string;
 }
 
 export interface IUserLogin {
   email: string;
   password: string;
+}
+
+export interface IUserRefresh {
+  token: string;
 }
 export interface IUserVerify {
   id: Types.ObjectId;
@@ -31,7 +35,13 @@ export interface IUserVerify {
 export interface IUserReset {
   password: string;
 }
+export interface IPasswordReset {
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
 export interface IUser extends Document {
+  _id: Types.ObjectId;
   firstname: string;
   lastname: string;
   email: string;

@@ -2,6 +2,7 @@ import ApiError from "../../errors/apiError";
 import { IUser } from "../../interfaces/user.interface";
 import transporter from "./nodemailer";
 
+const DOMAIN_NAME = process.env.DOMAIN_NAME;
 export const sendVerificationMail = async (userInfo: IUser) => {
   const mailOptions = {
     to: userInfo.email,
@@ -10,31 +11,24 @@ export const sendVerificationMail = async (userInfo: IUser) => {
     context: {
       name: userInfo.lastname,
       email: userInfo.email,
-      url: "hello",
+      url: `${DOMAIN_NAME}/verify/${userInfo._id}/${userInfo.verificationToken}`,
     },
   };
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.log(error);
     throw new ApiError(500, "Error sending verification email");
   }
 };
 
-export const sendforgotPasswordMail = async ({
-  email,
-  name,
-}: {
-  email: string;
-  name: string;
-}) => {
+export const sendforgotPasswordMail = async (userInfo: IUser) => {
   const mailOptions = {
-    to: email,
+    to: userInfo.email,
     subject: "Reset your password",
     template: "./passwordreset",
     context: {
-      name,
-      url: "hello",
+      name: userInfo.lastname,
+      url: `${DOMAIN_NAME}/reset-password/${userInfo._id}/${userInfo.resetToken}`,
     },
   };
   try {

@@ -1,5 +1,9 @@
 import { Types } from "mongoose";
-import { CreateClient, IClient } from "../interfaces/client.interface";
+import {
+  CreateClient,
+  IClient,
+  IClientParams,
+} from "../interfaces/client.interface";
 import Client from "../models/Client";
 import ApiError from "../errors/apiError";
 import ApiResponse from "../errors/apiResponse";
@@ -48,8 +52,24 @@ export const updateClientService = async (
   );
 };
 
-export const getClientsService = async (user: Types.ObjectId) => {
-  const clients = await paginatedFind<IClient>(Client, { user });
+export const getClientsService = async (
+  user: Types.ObjectId,
+  query: IClientParams
+) => {
+  const clients = await paginatedFind<IClient>(
+    Client,
+    {
+      user,
+      ...(query.search && {
+        $or: [
+          { firstname: { $regex: query.search, $options: "i" } },
+          { lastname: { $regex: query.search, $options: "i" } },
+        ],
+      }),
+    },
+    [],
+    query
+  );
   return new ApiResponse(200, "Clients fetched successfully", clients);
 };
 

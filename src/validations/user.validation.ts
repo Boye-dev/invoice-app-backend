@@ -92,10 +92,32 @@ const resetPasswordSchema = {
     password: Joi.string().required(),
   }),
 };
+const updatePasswordSchema = {
+  params: Joi.object({
+    id: Joi.string()
+      .custom((value, helpers) => {
+        if (!Types.ObjectId.isValid(value)) {
+          return helpers.error("any.invalid");
+        }
+        return value;
+      }, "ObjectId validation")
+      .required(),
+  }),
+  body: Joi.object({
+    oldPassword: Joi.string().required(),
+    newPassword: Joi.string().required(),
+    confirmNewPassword: Joi.string().required(),
+  }),
+};
 
 const forgotPasswodSchema = {
   body: Joi.object({
     email: Joi.string().email().required(),
+  }),
+};
+const refreshTokenSchema = {
+  body: Joi.object({
+    token: Joi.string().required(),
   }),
 };
 export const createUserValidation = () => {
@@ -112,6 +134,9 @@ export const loginUserValidation = () => {
   return validate(loginUserSchema, { context: true }, { abortEarly: false });
 };
 
+export const refreshTokenValidation = () => {
+  return validate(refreshTokenSchema, { context: true }, { abortEarly: false });
+};
 export const forgotPasswordValidation = () => {
   return validate(
     forgotPasswodSchema,
@@ -127,6 +152,14 @@ export const verifyUserValidation = () => {
 export const resetPassswordValidation = () => {
   return validate(
     resetPasswordSchema,
+    { context: true },
+    { abortEarly: false }
+  );
+};
+
+export const updatePassswordValidation = () => {
+  return validate(
+    updatePasswordSchema,
     { context: true },
     { abortEarly: false }
   );

@@ -1,5 +1,5 @@
 import ApiError from "../errors/apiError";
-import { CreateClient } from "../interfaces/client.interface";
+import { CreateClient, IClientParams } from "../interfaces/client.interface";
 import { ExpresFunction, IdParam } from "../interfaces/helper.interface";
 import {
   createClientService,
@@ -56,12 +56,16 @@ export const deleteClient: ExpresFunction = async (req, res, next) => {
   }
 };
 
-export const getClients: ExpresFunction = async (req, res, next) => {
+export const getClients: ExpresFunction<{}, IClientParams> = async (
+  req,
+  res,
+  next
+) => {
   try {
     if (!req.user) {
       throw new ApiError(401, "No logged in user");
     }
-    const data = await getClientsService(req.user.id);
+    const data = await getClientsService(req.user.id, req.query);
     return res.status(200).json(data);
   } catch (error) {
     next(error);

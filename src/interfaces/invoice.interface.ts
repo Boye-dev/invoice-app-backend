@@ -1,4 +1,6 @@
 import { Document, Types } from "mongoose";
+import { IParams } from "./helper.interface";
+import { IClient } from "./client.interface";
 
 export enum InvoiceType {
   QUOTATION = "QUOTATION",
@@ -23,8 +25,12 @@ export interface IInvoice extends Document {
 
 export interface CreateInvoice {
   name: string;
-  client: Types.ObjectId;
+  client: IClient;
   products: Types.ObjectId[];
   type: InvoiceType;
   paymentStatus: PaymentStatus;
+}
+export interface IInvoiceParams extends IParams {
+  paymentStatus?: string;
+  type?: keyof typeof InvoiceType;
 }

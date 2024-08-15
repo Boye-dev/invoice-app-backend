@@ -1,6 +1,6 @@
 import { Model, PopulateOptions } from "mongoose";
 export interface IQuery {
-  pageNumber?: number;
+  page?: number;
   pageSize?: number;
   sort?: string;
 }
@@ -17,12 +17,12 @@ export const paginatedFind = async <T>(
   let sort: string | undefined;
   if (query) {
     const {
-      pageNumber = 0,
+      page: pageNumber = 0,
       pageSize: queryPageSize = 10,
       sort: querySort,
     } = query;
-    page = pageNumber;
-    pageSize = queryPageSize;
+    page = Number(pageNumber);
+    pageSize = Number(queryPageSize);
     sort = querySort;
   }
   const sortOrder = sort && sort.startsWith("-") ? -1 : 1;
@@ -38,7 +38,7 @@ export const paginatedFind = async <T>(
       }),
     })
     .skip(pageSize * page)
-    .limit(page)
+    .limit(pageSize)
     .populate(populate || []);
   return { results, total, page, pageSize };
 };

@@ -1,5 +1,9 @@
 import { Types } from "mongoose";
-import { CreateInvoice, IInvoice } from "../interfaces/invoice.interface";
+import {
+  CreateInvoice,
+  IInvoice,
+  IInvoiceParams,
+} from "../interfaces/invoice.interface";
 import Invoice from "../models/Invoice";
 import ApiError from "../errors/apiError";
 import ApiResponse from "../errors/apiResponse";
@@ -12,20 +16,53 @@ export const createInvoiceService = async (
   user: Types.ObjectId,
   data: CreateInvoice
 ) => {
-  const client = await Client.findById(data.client);
-  if (!client) {
-    throw new ApiError(404, "Client not found");
+  if (data.client._id) {
+    const { _id, __v, ...payload } = data.client;
+    const client = await Client.findById(data.client._id);
+    if (!client) {
+      throw new ApiError(404, "Client not found");
+    }
+
+    await Client.findByIdAndUpdate(data.client._id, payload, { new: true });
+    const userData = await User.findById(user);
+    const total = await Invoice.countDocuments({ user });
+    const invoiceNumber = `${userData?.businessName.slice(0, 3).toUpperCase()}${
+      total + 1
+    }`;
+
+    const newInvoice = await Invoice.create({
+      ...data,
+      client: data.client._id,
+      user,
+      invoiceNumber,
+    });
+    return new ApiResponse(
+      201,
+      `${data.type} Created Successfully`,
+      newInvoice.toJSON()
+    );
   }
+
+  const { _id, __v, ...payload } = data.client;
+
+  const client = await Client.create({ ...payload, user });
   const userData = await User.findById(user);
+
   const total = await Invoice.countDocuments({ user });
   const invoiceNumber = `${userData?.businessName.slice(0, 3).toUpperCase()}${
     total + 1
   }`;
-  const newInvoice = await Invoice.create({ ...data, user, invoiceNumber });
+
+  const newInvoice = await Invoice.create({
+    ...data,
+    client: client._id,
+    user,
+    invoiceNumber,
+  });
 
   return new ApiResponse(
     201,
-    "Invoice Created Successfully",
+    `${data.type} Created Successfully`,
     newInvoice.toJSON()
   );
 };
@@ -38,6 +75,7 @@ export const updateInvoiceService = async (
   if (!invoice) {
     throw new ApiError(404, `Invoice not found`);
   }
+
   const updatedInvoice = await Invoice.findByIdAndUpdate(param.id, data, {
     new: true,
   });
@@ -53,11 +91,20 @@ export const updateInvoiceService = async (
   );
 };
 
-export const getInvoicesService = async (user: Types.ObjectId) => {
-  const invoices = await paginatedFind<IInvoice>(Invoice, { user }, [
-    "products",
-    "client",
-  ]);
+export const getInvoicesService = async (
+  user: Types.ObjectId,
+  query: IInvoiceParams
+) => {
+  const invoices = await paginatedFind<IInvoice>(
+    Invoice,
+    {
+      user,
+      type: query.type,
+      ...(query.search && { name: { $regex: query.search, $options: "i" } }),
+    },
+    ["products", "client"],
+    query
+  );
   return new ApiResponse(200, "Invoices fetched successfully", invoices);
 };
 
@@ -66,7 +113,6 @@ export const getByIdInvoiceService = async (
   param: IdParam
 ) => {
   const invoice = await Invoice.findOne({ user, _id: param.id }).populate([
-    "products",
     "client",
   ]);
   if (!invoice) {

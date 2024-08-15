@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 import { Document } from "mongoose";
+import { IParams } from "./helper.interface";
 
 export interface IProduct extends Document {
   name: string;
@@ -15,3 +16,5 @@ export interface CreateProduct {
   description: string;
   image?: string;
 }
+
+export interface IProductParams extends IParams {}
