@@ -12,14 +12,17 @@ const createInvoiceSchema = {
       .required(),
     products: Joi.array()
       .items(
-        Joi.string()
-          .custom((value, helpers) => {
-            if (!Types.ObjectId.isValid(value)) {
-              return helpers.error("any.invalid");
-            }
-            return value;
-          }, "ObjectId validation")
-          .required()
+        Joi.object({
+          productId: Joi.string()
+            .custom((value, helpers) => {
+              if (!Types.ObjectId.isValid(value)) {
+                return helpers.error("any.invalid");
+              }
+              return value;
+            }, "ObjectId validation")
+            .required(),
+          quantity: Joi.number().required(),
+        })
       )
       .required(),
     client: Joi.object({
@@ -43,12 +46,17 @@ const updateInvoiceSchema = {
     paymentStatus: Joi.string().valid(...Object.values(PaymentStatus)),
     type: Joi.string().valid(...Object.values(InvoiceType)),
     products: Joi.array().items(
-      Joi.string().custom((value, helpers) => {
-        if (!Types.ObjectId.isValid(value)) {
-          return helpers.error("any.invalid");
-        }
-        return value;
-      }, "ObjectId validation")
+      Joi.object({
+        productId: Joi.string()
+          .custom((value, helpers) => {
+            if (!Types.ObjectId.isValid(value)) {
+              return helpers.error("any.invalid");
+            }
+            return value;
+          }, "ObjectId validation")
+          .required(),
+        quantity: Joi.number().required(),
+      })
     ),
     client: Joi.object({
       firstname: Joi.string(),

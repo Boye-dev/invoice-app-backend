@@ -14,6 +14,7 @@ const createUserSchema = {
     businessState: Joi.string().required(),
     businessZip: Joi.string(),
     businessCountry: Joi.string().required(),
+    businessCurrency: Joi.string().required(),
     businessPhone: Joi.string().required(),
     businessEmail: Joi.string().email().required(),
     businessWebsite: Joi.string(),
@@ -32,6 +33,7 @@ const updateUserSchema = {
     businessCountry: Joi.string(),
     businessPhone: Joi.string(),
     businessEmail: Joi.string().email(),
+    businessCurrency: Joi.string(),
     businessWebsite: Joi.string(),
   }),
   params: Joi.object({
@@ -120,10 +122,18 @@ const refreshTokenSchema = {
     token: Joi.string().required(),
   }),
 };
+const sendEmailSchema = {
+  body: Joi.object({
+    email: Joi.string().email().required(),
+    user: Joi.string().email().required(),
+  }),
+};
 export const createUserValidation = () => {
   return validate(createUserSchema, { context: true }, { abortEarly: false });
 };
-
+export const sendEmailValidation = () => {
+  return validate(sendEmailSchema, { context: true }, { abortEarly: false });
+};
 export const updateUserValidation = () => {
   return validate(updateUserSchema, { context: true }, { abortEarly: false });
 };

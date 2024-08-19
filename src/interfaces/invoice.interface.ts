@@ -17,7 +17,10 @@ export interface IInvoice extends Document {
   name: string;
   user: Types.ObjectId;
   client: Types.ObjectId;
-  products: Types.ObjectId[];
+  products: {
+    productId: Types.ObjectId;
+    quantity: number;
+  }[];
   type: InvoiceType;
   paymentStatus: PaymentStatus;
   invoiceNumber: string;
@@ -26,7 +29,10 @@ export interface IInvoice extends Document {
 export interface CreateInvoice {
   name: string;
   client: IClient;
-  products: Types.ObjectId[];
+  products: {
+    productId: Types.ObjectId;
+    quantity: number;
+  }[];
   type: InvoiceType;
   paymentStatus: PaymentStatus;
 }

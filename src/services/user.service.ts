@@ -76,6 +76,7 @@ export const refreshService = async (data: IUserRefresh) => {
     throw new ApiError(500, "JWT secret is not configured");
   }
   const decoded = jwt.verify(data.token, JWT_SECRET) as IUserDecoded;
+
   if (!decoded) {
     throw new ApiError(400, `Invalid Token`);
   }

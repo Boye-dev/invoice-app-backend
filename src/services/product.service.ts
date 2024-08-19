@@ -65,12 +65,17 @@ export const getProductsService = async (
   user: Types.ObjectId,
   query: IProductParams
 ) => {
-  const products = await paginatedFind<IProduct>(Product, {
-    user,
-    ...(query.search && {
-      name: { $regex: query.search, $options: "i" },
-    }),
-  });
+  const products = await paginatedFind<IProduct>(
+    Product,
+    {
+      user,
+      ...(query.search && {
+        name: { $regex: query.search, $options: "i" },
+      }),
+    },
+    [],
+    query
+  );
   return new ApiResponse(200, "Products fetched successfully", products);
 };
 

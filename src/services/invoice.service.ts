@@ -86,7 +86,7 @@ export const updateInvoiceService = async (
 
   return new ApiResponse(
     200,
-    "Invoice Updated Successfully",
+    `${data.type} Updated Successfully`,
     updatedInvoice?.toJSON()
   );
 };

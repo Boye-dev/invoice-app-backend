@@ -25,20 +25,20 @@ export const paginatedFind = async <T>(
     pageSize = Number(queryPageSize);
     sort = querySort;
   }
-  const sortOrder = sort && sort.startsWith("-") ? -1 : 1;
+  const sortField = sort ? sort.replace("-", "") : "createdAt";
+  const sortOrder = sort ? (sort.startsWith("-") ? -1 : 1) : -1;
+  console.log(sortOrder, sortField);
   const total = await Model.countDocuments(findBy);
   const results = await Model.find({
     ...(findBy && {
       ...findBy,
     }),
   })
-    .sort({
-      ...(sort && {
-        [sort]: sortOrder,
-      }),
-    })
     .skip(pageSize * page)
     .limit(pageSize)
+    .sort({
+      [sortField]: sortOrder,
+    })
     .populate(populate || []);
   return { results, total, page, pageSize };
 };

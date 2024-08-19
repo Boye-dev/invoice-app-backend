@@ -14,9 +14,14 @@ export interface CreateUserRequest {
   businessZip: string;
   businessCountry: string;
   businessPhone: string;
+  businessCurrency: string;
   businessEmail: string;
   businessWebsite?: string;
   businessLogo: string;
+}
+export interface ISendEmail {
+  email: string;
+  user: string;
 }
 
 export interface IUserLogin {
@@ -57,7 +62,8 @@ export interface IUser extends Document {
   businessCountry: string;
   businessPhone: string;
   businessEmail: string;
-  businessWebsite: string;
+  businessWebsite?: string;
+  businessCurrency: string;
   verificationToken?: string;
   resetToken?: string;
   resetTokenExpires?: Date;

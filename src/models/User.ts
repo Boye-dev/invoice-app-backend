@@ -17,6 +17,7 @@ const userSchema = new Schema<IUser>(
     businessZip: { type: String },
     businessCountry: { type: String, required: true },
     businessPhone: { type: String, required: true },
+    businessCurrency: { type: String, required: true },
     businessEmail: { type: String, required: true },
     businessWebsite: { type: String },
     verificationToken: { type: String },

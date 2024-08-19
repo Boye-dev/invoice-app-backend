@@ -1,8 +1,10 @@
 import ApiError from "../errors/apiError";
+import ApiResponse from "../errors/apiResponse";
 import { ExpresFunction, IdParam } from "../interfaces/helper.interface";
 import {
   CreateUserRequest,
   IPasswordReset,
+  ISendEmail,
   IUserLogin,
   IUserRefresh,
   IUserReset,
@@ -10,6 +12,7 @@ import {
 } from "../interfaces/user.interface";
 import User from "../models/User";
 import { cloudinaryImageUpload } from "../services/cloudinary.service";
+import { sendInvoiceMail } from "../services/nodemailer/mail.service";
 import {
   createUserService,
   forgotPasswordService,
@@ -53,6 +56,25 @@ export const createUser: ExpresFunction<CreateUserRequest> = async (
     req.body.businessLogo = businessLogoResult.secure_url;
     const data = await createUserService(req.body);
     return res.status(201).json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+export const sendEmailToClient: ExpresFunction<ISendEmail> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    if (req.file) {
+      await sendInvoiceMail(req.file, req.body.email, req.body.user);
+
+      return res
+        .status(201)
+        .json(new ApiResponse(200, "Email sent successfully"));
+    } else {
+      throw new ApiError(400, "No file provided");
+    }
   } catch (error) {
     next(error);
   }
@@ -146,6 +168,7 @@ export const resetPassword: ExpresFunction<IUserReset> = async (
     );
     return res.status(200).json(data);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

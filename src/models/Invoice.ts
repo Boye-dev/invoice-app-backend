@@ -15,7 +15,18 @@ const invoiceSchema = new Schema<IInvoice>(
     },
     name: { type: String, required: true },
     invoiceNumber: { type: String, required: true },
-    products: [{ type: Schema.Types.ObjectId, ref: "Product", required: true }],
+    products: [
+      {
+        productId: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: { type: Number, required: true, default: 1 },
+        _id: false,
+      },
+    ],
+
     client: { type: Schema.Types.ObjectId, ref: "Client", required: true },
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },

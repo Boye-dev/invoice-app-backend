@@ -5,6 +5,7 @@ import {
   loginUserValidation,
   refreshTokenValidation,
   resetPassswordValidation,
+  sendEmailValidation,
   updatePassswordValidation,
   updateUserValidation,
   verifyUserValidation,
@@ -17,12 +18,15 @@ import {
   login,
   refresh,
   resetPassword,
+  sendEmailToClient,
   updatePassword,
   updateUser,
   verifyUser,
 } from "../controllers/user.controller";
 import { upload } from "../config/upload";
 import { isAuthenticated } from "../middlewares/authenticatedMiddleWare";
+import multer from "multer";
+const emailUpload = multer({ dest: "uploads/" });
 
 const router = Router();
 
@@ -34,6 +38,14 @@ router.route("/").post(
   createUserValidation(),
   createUser
 );
+
+router
+  .route("/send-email")
+  .post(
+    emailUpload.single("invoice"),
+    sendEmailValidation(),
+    sendEmailToClient
+  );
 
 router
   .route("/:id")
@@ -55,7 +67,6 @@ router.post("/refresh", refreshTokenValidation(), refresh);
 router.post("/forgot-password", forgotPasswordValidation(), forgotPassword);
 
 router.get("/verify/:id/:token", verifyUserValidation(), verifyUser);
-
 router.patch(
   "/reset-password/:id/:token",
   resetPassswordValidation(),
