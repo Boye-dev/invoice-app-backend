@@ -42,11 +42,12 @@ export const sendforgotPasswordMail = async (userInfo: IUser) => {
 };
 
 export const sendInvoiceMail = async (
-  file: Express.Multer.File,
+  file: { path: string; filename: string },
   email: string,
   user: string
 ) => {
   const filePath = file.path;
+  console.log({ filePath });
   const mailOptions = {
     from: user,
     to: email,
@@ -54,8 +55,8 @@ export const sendInvoiceMail = async (
     text: "Please find the attached PDF.",
     attachments: [
       {
-        filename: file.fieldname,
-        path: filePath,
+        filename: file.filename,
+        href: filePath,
         contentType: "application/pdf",
       },
     ],
@@ -70,18 +71,6 @@ export const sendInvoiceMail = async (
       },
     });
     await emailTransporter.sendMail(mailOptions);
-
-    const uploadDir = path.dirname(filePath);
-    fs.readdir(uploadDir, (err, files) => {
-      if (err) throw err;
-
-      for (const file of files) {
-        fs.unlink(path.join(uploadDir, file), (err) => {
-          if (err) console.error(`Error deleting file ${file}:`, err);
-          else console.log(`File ${file} deleted successfully.`);
-        });
-      }
-    });
   } catch (error) {
     throw new ApiError(500, "Error Sending email");
   }

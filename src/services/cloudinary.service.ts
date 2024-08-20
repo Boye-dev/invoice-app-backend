@@ -30,11 +30,17 @@ cloudinary.config({
 
 export const cloudinaryImageUpload = (
   imageBuffer: Buffer,
-  folder?: string
+  folder?: string,
+  resource_type?: "image" | "video" | "raw" | "auto" | undefined
 ): Promise<UploadApiResponse> => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
-      { folder },
+      {
+        folder,
+        ...(resource_type && {
+          resource_type,
+        }),
+      },
       // { upload_preset: secret.cloudinary_upload_preset },
       (error, result) => {
         if (error) {
@@ -53,3 +59,5 @@ export const cloudinaryImageUpload = (
     bufferStream.pipe(uploadStream);
   });
 };
+
+export default cloudinary;

@@ -11,7 +11,9 @@ import {
   IUserVerify,
 } from "../interfaces/user.interface";
 import User from "../models/User";
-import { cloudinaryImageUpload } from "../services/cloudinary.service";
+import cloudinary, {
+  cloudinaryImageUpload,
+} from "../services/cloudinary.service";
 import { sendInvoiceMail } from "../services/nodemailer/mail.service";
 import {
   createUserService,
@@ -67,7 +69,20 @@ export const sendEmailToClient: ExpresFunction<ISendEmail> = async (
 ) => {
   try {
     if (req.file) {
-      await sendInvoiceMail(req.file, req.body.email, req.body.user);
+      const imageResult = await cloudinaryImageUpload(
+        req.file.buffer,
+        "InvoiceApp_Products",
+        "raw"
+      );
+      console.log(imageResult);
+      await sendInvoiceMail(
+        {
+          path: imageResult.secure_url,
+          filename: "invoice",
+        },
+        req.body.email,
+        req.body.user
+      );
 
       return res
         .status(201)

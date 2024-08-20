@@ -26,7 +26,6 @@ import {
 import { upload } from "../config/upload";
 import { isAuthenticated } from "../middlewares/authenticatedMiddleWare";
 import multer from "multer";
-const emailUpload = multer({ storage: multer.memoryStorage() });
 
 const router = Router();
 
@@ -41,11 +40,7 @@ router.route("/").post(
 
 router
   .route("/send-email")
-  .post(
-    emailUpload.single("invoice"),
-    sendEmailValidation(),
-    sendEmailToClient
-  );
+  .post(upload.single("invoice"), sendEmailValidation(), sendEmailToClient);
 
 router
   .route("/:id")
