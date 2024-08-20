@@ -26,7 +26,7 @@ import {
 import { upload } from "../config/upload";
 import { isAuthenticated } from "../middlewares/authenticatedMiddleWare";
 import multer from "multer";
-const emailUpload = multer({ dest: "uploads/" });
+const emailUpload = multer({ storage: multer.memoryStorage() });
 
 const router = Router();
 
