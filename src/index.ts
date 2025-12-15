@@ -10,7 +10,7 @@ import clientRoutes from "./routes/client.routes";
 import productRoutes from "./routes/product.routes";
 import invoiceRoutes from "./routes/invoice.routes";
 
-const PORT = 4000;
+const PORT = 5000;
 
 const app = express();
 
