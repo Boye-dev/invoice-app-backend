@@ -30,7 +30,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/invoices", invoiceRoutes);
 
 app.listen(PORT, () => {
-  console.log("Server Listening on port 4000...");
+  console.log("Server Listening on port 5000...");
 });
 app.all("*", (req, _res, next) => {
   next(new ApiError(404, `Can't find ${req.originalUrl} on the server!`));
